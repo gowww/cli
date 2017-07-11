@@ -20,7 +20,7 @@ var (
 
 // Parse parses the command.
 func Parse() {
-	flag.Usage = usage
+	flag.Usage = Usage
 	flag.Parse()
 
 	// Pass args after "--" to subprocess.

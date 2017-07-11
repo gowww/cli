@@ -7,14 +7,6 @@ var (
 	production bool
 )
 
-func run() {
-	// Run app.
-}
-
-func watch() {
-	// Detect changes and rerun app.
-}
-
 func Example() {
 	cli.Description = "My app command line interface."
 
@@ -27,4 +19,12 @@ func Example() {
 	cli.Command("watch", watch, "Detect changes and rerun app.")
 
 	cli.Parse()
+}
+
+func run() {
+	// Run app.
+}
+
+func watch() {
+	// Detect changes and rerun app.
 }
