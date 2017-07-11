@@ -8,7 +8,8 @@ import (
 	"strings"
 )
 
-func usage() {
+// Usage prints the CLI usage.
+func Usage() {
 	printUsage(Description, "", commands, flagsUsage)
 }
 
