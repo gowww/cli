@@ -26,12 +26,12 @@ func Command(name string, f func(), description string) *CommandUnit {
 		flagSet:     flag.NewFlagSet(name, flag.ExitOnError),
 	}
 	cmd.flagSet.Usage = cmd.usage // [command] [subcommand] -h
-	commands = append(commands, cmd)
+	mainCommands = append(mainCommands, cmd)
 	return cmd
 }
 
 func (c *CommandUnit) usage() {
-	printUsage(c.description, c.name, nil, c.flagsUsage)
+	printUsage(c)
 }
 
 func addFlagUsage(m *map[string]string, name string, value interface{}, usage string) {

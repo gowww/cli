@@ -33,7 +33,7 @@ var (
 )
 
 func main() {
-	cli.Description = "My app command line interface."
+	cli.Description = "Command line interface example."
 
 	cli.String(&address, "address", ":8080", "The address to listen and serve on.")
 
@@ -58,11 +58,11 @@ func watch() {
 #### Usage output
 
 ```Shell
-My app command line interface.
+Command line interface example.
 
 Usage:
 
-        app [command]
+        example [command]
 
 Commands:
 
