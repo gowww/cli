@@ -10,36 +10,56 @@ import (
 
 // Usage prints the CLI usage.
 func Usage() {
-	printUsage(Description, "", commands, flagsUsage)
+	printUsage(nil)
 }
 
-func printUsage(description, command string, commands []*CommandUnit, flags map[string]string) {
-	if description == "" {
-		if command == "" {
+func printUsage(command *CommandUnit) {
+	var description string
+	if command == nil {
+		if Description == "" {
 			description = strings.Title(filepath.Base(os.Args[0]))
 		} else {
-			description = strings.Title(command)
+			description = Description
+		}
+	} else {
+		if command.description == "" {
+			description = strings.Title(command.name)
+		} else {
+			description = command.description
 		}
 	}
+
 	fmt.Printf("\n%s\n\nUsage:\n\n\t%s", description, os.Args[0])
-	if command != "" {
-		fmt.Printf(" %s", command)
+	if len(mainFlagsUsage) > 0 {
+		fmt.Print(" [flags]")
 	}
-	if len(commands) > 0 {
-		fmt.Printf(" [command]")
-	}
-	if len(flags) > 0 {
-		fmt.Printf(" [flags]")
+	if command == nil {
+		if len(mainCommands) > 0 {
+			fmt.Printf(" [command]")
+		}
+	} else {
+		fmt.Printf(" %s", command.name)
+		if len(command.flagsUsage) > 0 {
+			fmt.Print(" [flags]")
+		}
 	}
 	fmt.Print("\n\n")
-	if len(commands) > 0 {
+
+	if command == nil && len(mainCommands) > 0 {
 		fmt.Print("Commands:\n\n")
-		sort.Slice(commands, func(i, j int) bool { return commands[i].name < commands[j].name })
-		l := maxCommandLen(commands)
-		for _, cmd := range commands {
+		sort.Slice(mainCommands, func(i, j int) bool { return mainCommands[i].name < mainCommands[j].name })
+		l := maxCommandLen(mainCommands)
+		for _, cmd := range mainCommands {
 			fmt.Printf("\t%s%s  %s\n", cmd.name, strings.Repeat(" ", l-len(cmd.name)), cmd.description)
 		}
 		fmt.Print("\n")
+	}
+
+	var flags map[string]string
+	if command == nil {
+		flags = mainFlagsUsage
+	} else {
+		flags = command.flagsUsage
 	}
 	if len(flags) > 0 {
 		fmt.Print("Flags:\n\n")
