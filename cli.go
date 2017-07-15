@@ -55,9 +55,9 @@ func CleanLines(n int) {
 
 // Bool defines a bool flag with specified name, default value, and usage string.
 // The argument p points to a bool variable in which to store the value of the flag.
-func Bool(p *time.Duration, name string, value time.Duration, usage string) {
+func Bool(p *bool, name string, value bool, usage string) {
 	addFlagUsage(&mainFlagsUsage, name, value, usage)
-	flag.DurationVar(p, name, value, usage)
+	flag.BoolVar(p, name, value, usage)
 }
 
 // Duration defines a time.Duration flag with specified name, default value, and usage string.
