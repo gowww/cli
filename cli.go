@@ -41,6 +41,11 @@ func Parse() {
 	}
 }
 
+// Parsed reports whether the command-line flags have been parsed.
+func Parsed() bool {
+	return flag.Parsed()
+}
+
 // SubArgs returns the arguments after "--".
 func SubArgs() []string {
 	return subArgs
