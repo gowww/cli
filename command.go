@@ -11,7 +11,6 @@ type CommandUnit struct {
 	f           func()
 	name        string
 	description string
-	flagsUsage  map[string]string // Flags usage.
 	flagSet     *flag.FlagSet
 }
 
