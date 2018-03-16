@@ -24,7 +24,7 @@ func Command(name string, f func(), description string) *CommandUnit {
 		flagSet:     flag.NewFlagSet(name, flag.ExitOnError),
 	}
 	cmd.flagSet.Usage = cmd.usage // [command] [subcommand] -h
-	mainCommands = append(mainCommands, cmd)
+	commands = append(commands, cmd)
 	return cmd
 }
 

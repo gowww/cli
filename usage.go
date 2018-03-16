@@ -44,27 +44,24 @@ func printUsage(command *CommandUnit) {
 
 	// Print usage
 	fmt.Printf("\n%s\n\nUsage:\n\n\t%s", description, os.Args[0])
-	if len(flags) > 0 {
-		fmt.Print(" [flags]")
-	}
 	if command == nil {
-		if len(mainCommands) > 0 {
-			fmt.Printf(" [command]")
+		if len(commands) > 0 {
+			fmt.Print(" [command]")
 		}
 	} else {
 		fmt.Printf(" %s", command.name)
-		if len(command.flagsUsage) > 0 {
+		if len(flags) > 0 {
 			fmt.Print(" [flags]")
 		}
 	}
 	fmt.Print("\n\n")
 
 	// Print commands
-	if command == nil && len(mainCommands) > 0 {
+	if command == nil && len(commands) > 0 {
 		fmt.Print("Commands:\n\n")
-		sort.Slice(mainCommands, func(i, j int) bool { return mainCommands[i].name < mainCommands[j].name })
-		l := maxCommandLen(mainCommands)
-		for _, cmd := range mainCommands {
+		sort.Slice(commands, func(i, j int) bool { return commands[i].name < commands[j].name })
+		l := maxCommandLen(commands)
+		for _, cmd := range commands {
 			fmt.Printf("\t%s%s  %s\n", cmd.name, strings.Repeat(" ", l-len(cmd.name)), cmd.description)
 		}
 		fmt.Print("\n")
