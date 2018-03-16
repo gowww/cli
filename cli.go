@@ -63,6 +63,9 @@ func CleanLines(n int) {
 func Bool(p *bool, name string, value bool, usage string) {
 	addFlagUsage(&mainFlagsUsage, name, value, usage)
 	flag.BoolVar(p, name, value, usage)
+	for _, c := range mainCommands {
+		c.Bool(p, name, value, usage)
+	}
 }
 
 // Duration defines a time.Duration flag with specified name, default value, and usage string.
@@ -71,6 +74,9 @@ func Bool(p *bool, name string, value bool, usage string) {
 func Duration(p *time.Duration, name string, value time.Duration, usage string) {
 	addFlagUsage(&mainFlagsUsage, name, value, usage)
 	flag.DurationVar(p, name, value, usage)
+	for _, c := range mainCommands {
+		c.Duration(p, name, value, usage)
+	}
 }
 
 // Float64 defines a float64 flag with specified name, default value, and usage string.
@@ -78,6 +84,9 @@ func Duration(p *time.Duration, name string, value time.Duration, usage string) 
 func Float64(p *float64, name string, value float64, usage string) {
 	addFlagUsage(&mainFlagsUsage, name, value, usage)
 	flag.Float64Var(p, name, value, usage)
+	for _, c := range mainCommands {
+		c.Float64(p, name, value, usage)
+	}
 }
 
 // Int defines an int flag with specified name, default value, and usage string.
@@ -85,6 +94,9 @@ func Float64(p *float64, name string, value float64, usage string) {
 func Int(p *int, name string, value int, usage string) {
 	addFlagUsage(&mainFlagsUsage, name, value, usage)
 	flag.IntVar(p, name, value, usage)
+	for _, c := range mainCommands {
+		c.Int(p, name, value, usage)
+	}
 }
 
 // Int64 defines an int64 flag with specified name, default value, and usage string.
@@ -92,6 +104,9 @@ func Int(p *int, name string, value int, usage string) {
 func Int64(p *int64, name string, value int64, usage string) {
 	addFlagUsage(&mainFlagsUsage, name, value, usage)
 	flag.Int64Var(p, name, value, usage)
+	for _, c := range mainCommands {
+		c.Int64(p, name, value, usage)
+	}
 }
 
 // String defines a string flag with specified name, default value, and usage string.
@@ -99,6 +114,9 @@ func Int64(p *int64, name string, value int64, usage string) {
 func String(p *string, name string, value string, usage string) {
 	addFlagUsage(&mainFlagsUsage, name, value, usage)
 	flag.StringVar(p, name, value, usage)
+	for _, c := range mainCommands {
+		c.String(p, name, value, usage)
+	}
 }
 
 // Uint defines a uint flag with specified name, default value, and usage string.
@@ -106,6 +124,9 @@ func String(p *string, name string, value string, usage string) {
 func Uint(p *uint, name string, value uint, usage string) {
 	addFlagUsage(&mainFlagsUsage, name, value, usage)
 	flag.UintVar(p, name, value, usage)
+	for _, c := range mainCommands {
+		c.Uint(p, name, value, usage)
+	}
 }
 
 // Uint64 defines a uint64 flag with specified name, default value, and usage string.
@@ -113,4 +134,7 @@ func Uint(p *uint, name string, value uint, usage string) {
 func Uint64(p *uint64, name string, value uint64, usage string) {
 	addFlagUsage(&mainFlagsUsage, name, value, usage)
 	flag.Uint64Var(p, name, value, usage)
+	for _, c := range mainCommands {
+		c.Uint64(p, name, value, usage)
+	}
 }
