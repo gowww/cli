@@ -3,8 +3,6 @@ package cli
 
 import (
 	"flag"
-	"fmt"
-	"reflect"
 	"time"
 )
 
@@ -34,20 +32,9 @@ func (c *CommandUnit) usage() {
 	printUsage(c)
 }
 
-func addFlagUsage(m *map[string]string, name string, value interface{}, usage string) {
-	if *m == nil {
-		*m = make(map[string]string)
-	}
-	if !reflect.DeepEqual(value, reflect.Zero(reflect.TypeOf(value)).Interface()) {
-		name += fmt.Sprintf("=%v", value)
-	}
-	(*m)[name] = usage
-}
-
 // Bool defines a bool flag with specified name, default value, and usage string.
 // The argument p points to a bool variable in which to store the value of the flag.
 func (c *CommandUnit) Bool(p *bool, name string, value bool, usage string) *CommandUnit {
-	addFlagUsage(&c.flagsUsage, name, value, usage)
 	c.flagSet.BoolVar(p, name, value, usage)
 	return c
 }
@@ -56,7 +43,6 @@ func (c *CommandUnit) Bool(p *bool, name string, value bool, usage string) *Comm
 // The argument p points to a time.Duration variable in which to store the value of the flag.
 // The flag accepts a value acceptable to time.ParseDuration.
 func (c *CommandUnit) Duration(p *time.Duration, name string, value time.Duration, usage string) *CommandUnit {
-	addFlagUsage(&c.flagsUsage, name, value, usage)
 	c.flagSet.DurationVar(p, name, value, usage)
 	return c
 }
@@ -64,7 +50,6 @@ func (c *CommandUnit) Duration(p *time.Duration, name string, value time.Duratio
 // Float64 defines a float64 flag with specified name, default value, and usage string.
 // The argument p points to a float64 variable in which to store the value of the flag.
 func (c *CommandUnit) Float64(p *float64, name string, value float64, usage string) *CommandUnit {
-	addFlagUsage(&c.flagsUsage, name, value, usage)
 	c.flagSet.Float64Var(p, name, value, usage)
 	return c
 }
@@ -72,7 +57,6 @@ func (c *CommandUnit) Float64(p *float64, name string, value float64, usage stri
 // Int defines an int flag with specified name, default value, and usage string.
 // The argument p points to an int variable in which to store the value of the flag.
 func (c *CommandUnit) Int(p *int, name string, value int, usage string) *CommandUnit {
-	addFlagUsage(&c.flagsUsage, name, value, usage)
 	c.flagSet.IntVar(p, name, value, usage)
 	return c
 }
@@ -80,7 +64,6 @@ func (c *CommandUnit) Int(p *int, name string, value int, usage string) *Command
 // Int64 defines an int64 flag with specified name, default value, and usage string.
 // The argument p points to an int64 variable in which to store the value of the flag.
 func (c *CommandUnit) Int64(p *int64, name string, value int64, usage string) *CommandUnit {
-	addFlagUsage(&c.flagsUsage, name, value, usage)
 	c.flagSet.Int64Var(p, name, value, usage)
 	return c
 }
@@ -88,7 +71,6 @@ func (c *CommandUnit) Int64(p *int64, name string, value int64, usage string) *C
 // String defines a string flag with specified name, default value, and usage string.
 // The argument p points to a string variable in which to store the value of the flag.
 func (c *CommandUnit) String(p *string, name string, value string, usage string) *CommandUnit {
-	addFlagUsage(&c.flagsUsage, name, value, usage)
 	c.flagSet.StringVar(p, name, value, usage)
 	return c
 }
@@ -96,7 +78,6 @@ func (c *CommandUnit) String(p *string, name string, value string, usage string)
 // Uint defines a uint flag with specified name, default value, and usage string.
 // The argument p points to a uint variable in which to store the value of the flag.
 func (c *CommandUnit) Uint(p *uint, name string, value uint, usage string) *CommandUnit {
-	addFlagUsage(&c.flagsUsage, name, value, usage)
 	c.flagSet.UintVar(p, name, value, usage)
 	return c
 }
@@ -104,7 +85,6 @@ func (c *CommandUnit) Uint(p *uint, name string, value uint, usage string) *Comm
 // Uint64 defines a uint64 flag with specified name, default value, and usage string.
 // The argument p points to a uint64 variable in which to store the value of the flag.
 func (c *CommandUnit) Uint64(p *uint64, name string, value uint64, usage string) *CommandUnit {
-	addFlagUsage(&c.flagsUsage, name, value, usage)
 	c.flagSet.Uint64Var(p, name, value, usage)
 	return c
 }

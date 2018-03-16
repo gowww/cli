@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -14,6 +15,7 @@ func Usage() {
 }
 
 func printUsage(command *CommandUnit) {
+	// Print description
 	var description string
 	if command == nil {
 		if Description == "" {
@@ -29,8 +31,20 @@ func printUsage(command *CommandUnit) {
 		}
 	}
 
+	// Get flags
+	var flags []*Flag
+	flagVisitFunc := func(f *flag.Flag) {
+		flags = append(flags, &Flag{*f})
+	}
+	if command == nil {
+		flag.VisitAll(flagVisitFunc)
+	} else {
+		command.flagSet.VisitAll(flagVisitFunc)
+	}
+
+	// Print usage
 	fmt.Printf("\n%s\n\nUsage:\n\n\t%s", description, os.Args[0])
-	if len(mainFlagsUsage) > 0 {
+	if len(flags) > 0 {
 		fmt.Print(" [flags]")
 	}
 	if command == nil {
@@ -45,6 +59,7 @@ func printUsage(command *CommandUnit) {
 	}
 	fmt.Print("\n\n")
 
+	// Print commands
 	if command == nil && len(mainCommands) > 0 {
 		fmt.Print("Commands:\n\n")
 		sort.Slice(mainCommands, func(i, j int) bool { return mainCommands[i].name < mainCommands[j].name })
@@ -55,18 +70,12 @@ func printUsage(command *CommandUnit) {
 		fmt.Print("\n")
 	}
 
-	var flags map[string]string
-	if command == nil {
-		flags = mainFlagsUsage
-	} else {
-		flags = command.flagsUsage
-	}
+	// Print flags
 	if len(flags) > 0 {
 		fmt.Print("Flags:\n\n")
-		ff := sortedFlags(flags)
 		l := maxFlagLen(flags)
-		for _, f := range ff {
-			fmt.Printf("\t-%s%s  %s\n", f, strings.Repeat(" ", l-len(f)), flags[f])
+		for _, f := range flags {
+			fmt.Printf("\t-%s%s  %s\n", f.NameWithDefValue(), strings.Repeat(" ", l-len(f.NameWithDefValue())), f.Usage)
 		}
 		fmt.Print("\n")
 	}
@@ -81,20 +90,12 @@ func maxCommandLen(cmds []*CommandUnit) (l int) {
 	return
 }
 
-func maxFlagLen(flags map[string]string) (l int) {
-	for f := range flags {
-		if len(f) > l {
-			l = len(f)
+func maxFlagLen(flags []*Flag) (l int) {
+	for _, f := range flags {
+		name := f.NameWithDefValue()
+		if len(name) > l {
+			l = len(name)
 		}
 	}
 	return
-}
-
-func sortedFlags(ss map[string]string) []string {
-	keys := make([]string, 0, len(ss))
-	for k := range ss {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	return keys
 }
