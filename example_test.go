@@ -8,15 +8,14 @@ var (
 )
 
 func Example() {
-	cli.Description = "My app command line interface."
-
-	cli.String(&address, "address", ":8080", "The address to listen and serve on.")
+	cli.Description = "Command line interface example."
 
 	cli.Command("run", run, "Run app.").
-		String(&address, "address", ":8080", "The address to listen and serve on.").
 		Bool(&production, "docker", false, `Run the server in production environment.`)
 
 	cli.Command("watch", watch, "Detect changes and rerun app.")
+
+	cli.String(&address, "address", ":8080", "The address to listen and serve on.")
 
 	cli.Parse()
 }
