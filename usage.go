@@ -45,6 +45,9 @@ func printUsage(command *CommandUnit) {
 	// Print usage
 	fmt.Printf("\n%s\n\nUsage:\n\n\t%s", description, os.Args[0])
 	if command == nil {
+		if len(flags) > 0 {
+			fmt.Print(" [flags]")
+		}
 		if len(commands) > 0 {
 			fmt.Print(" [command]")
 		}
@@ -56,6 +59,16 @@ func printUsage(command *CommandUnit) {
 	}
 	fmt.Print("\n\n")
 
+	// Print flags
+	if len(flags) > 0 {
+		fmt.Print("Flags:\n\n")
+		l := maxFlagLen(flags)
+		for _, f := range flags {
+			fmt.Printf("\t-%s%s  %s\n", f.NameWithDefValue(), strings.Repeat(" ", l-len(f.NameWithDefValue())), f.Usage)
+		}
+		fmt.Print("\n")
+	}
+
 	// Print commands
 	if command == nil && len(commands) > 0 {
 		fmt.Print("Commands:\n\n")
@@ -63,16 +76,6 @@ func printUsage(command *CommandUnit) {
 		l := maxCommandLen(commands)
 		for _, cmd := range commands {
 			fmt.Printf("\t%s%s  %s\n", cmd.name, strings.Repeat(" ", l-len(cmd.name)), cmd.description)
-		}
-		fmt.Print("\n")
-	}
-
-	// Print flags
-	if len(flags) > 0 {
-		fmt.Print("Flags:\n\n")
-		l := maxFlagLen(flags)
-		for _, f := range flags {
-			fmt.Printf("\t-%s%s  %s\n", f.NameWithDefValue(), strings.Repeat(" ", l-len(f.NameWithDefValue())), f.Usage)
 		}
 		fmt.Print("\n")
 	}
