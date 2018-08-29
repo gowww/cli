@@ -16,18 +16,18 @@ func Usage() {
 
 func printUsage(command *CommandUnit) {
 	// Print description
-	var description string
+	var ut string
 	if command == nil {
-		if Description == "" {
-			description = strings.Title(filepath.Base(os.Args[0]))
+		if usageText == "" {
+			ut = strings.Title(filepath.Base(os.Args[0]))
 		} else {
-			description = Description
+			ut = usageText
 		}
 	} else {
-		if command.description == "" {
-			description = strings.Title(command.flagSet.Name())
+		if command.usageText == "" {
+			ut = strings.Title(command.flagSet.Name())
 		} else {
-			description = command.description
+			ut = command.usageText
 		}
 	}
 
@@ -43,7 +43,7 @@ func printUsage(command *CommandUnit) {
 	}
 
 	// Print usage
-	fmt.Printf("\n%s\n\nUsage:\n\n\t%s", description, os.Args[0])
+	fmt.Printf("\n%s\n\nUsage:\n\n\t%s", ut, os.Args[0])
 	if command == nil {
 		if len(commands) > 0 {
 			fmt.Print(" [command]")
@@ -51,10 +51,16 @@ func printUsage(command *CommandUnit) {
 		if len(flags) > 0 {
 			fmt.Print(" [flags]")
 		}
+		if usageSuffix != "" {
+			fmt.Print(" ", usageSuffix)
+		}
 	} else {
 		fmt.Printf(" %s", command.flagSet.Name())
 		if len(flags) > 0 {
 			fmt.Print(" [flags]")
+		}
+		if command.usageSuffix != "" {
+			fmt.Print(" ", command.usageSuffix)
 		}
 	}
 	fmt.Print("\n\n")
@@ -65,7 +71,7 @@ func printUsage(command *CommandUnit) {
 		sort.Slice(commands, func(i, j int) bool { return commands[i].flagSet.Name() < commands[j].flagSet.Name() })
 		l := maxCommandLen(commands)
 		for _, cmd := range commands {
-			fmt.Printf("\t%s%s  %s\n", cmd.flagSet.Name(), strings.Repeat(" ", l-len(cmd.flagSet.Name())), cmd.description)
+			fmt.Printf("\t%s%s  %s\n", cmd.flagSet.Name(), strings.Repeat(" ", l-len(cmd.flagSet.Name())), cmd.usageText)
 		}
 		fmt.Print("\n")
 	}

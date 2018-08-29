@@ -6,19 +6,22 @@ import (
 	"time"
 )
 
-// A CommandUnit is a CLI command with name, description and flags.
+// A CommandUnit is a CLI command with name, usage and flags.
 type CommandUnit struct {
 	f           func()
-	description string
+	usageText   string
+	usageSuffix string
 	flagSet     *flag.FlagSet
 }
 
 // Command adds a new command to the CLI.
-func Command(name string, f func(), description string) *CommandUnit {
+// f is the function that will be executed when the command is called.
+// usageText is the command description for the usage help.
+func Command(name string, f func(), usageText string) *CommandUnit {
 	cmd := &CommandUnit{
-		description: description,
-		f:           f,
-		flagSet:     flag.NewFlagSet(name, flag.ExitOnError),
+		usageText: usageText,
+		f:         f,
+		flagSet:   flag.NewFlagSet(name, flag.ExitOnError),
 	}
 	cmd.flagSet.Usage = cmd.usage // [command] [subcommand] -h
 	commands = append(commands, cmd)
@@ -27,6 +30,13 @@ func Command(name string, f func(), description string) *CommandUnit {
 
 func (c *CommandUnit) usage() {
 	printUsage(c)
+}
+
+// SetUsageSuffix sets the suffix added to the the usage line.
+// It can be used to documentate command arguments.
+func (c *CommandUnit) SetUsageSuffix(s string) *CommandUnit {
+	c.usageSuffix = s
+	return c
 }
 
 // Bool defines a bool flag with specified name, default value, and usage string.
