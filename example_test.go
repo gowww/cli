@@ -3,27 +3,24 @@ package cli_test
 import "github.com/gowww/cli"
 
 var (
-	address    string
-	production bool
+	flagForMain    string // Flag "-m"
+	flagForCommand string // Flag "-c"
+	flagForAll     string // Flag "-a"
 )
 
 func Example() {
 	cli.Description = "Command line interface example."
 
-	cli.Command("run", run, "Run app.").
-		Bool(&production, "docker", false, `Run the server in production environment.`)
+	cli.String(&flagForMain, "m", "", "Example flag for main function.")
 
-	cli.Command("watch", watch, "Detect changes and rerun app.")
+	cli.Command("command", command, "Example command.").
+		String(&flagForCommand, "c", "", `Example flag for this command only.`)
 
-	cli.String(&address, "address", ":8080", "The address to listen and serve on.")
+	cli.String(&flagForAll, "a", "", "Example flag for main function and all commands defined previously.")
 
 	cli.Parse()
 }
 
-func run() {
-	// Run app.
-}
-
-func watch() {
-	// Detect changes and rerun app.
+func command() {
+	// Do the command job.
 }
