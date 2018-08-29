@@ -8,29 +8,44 @@ import (
 )
 
 var (
-	// Description is the CLI description for help.
-	Description string
-
-	commands []*CommandUnit
-	subArgs  []string
+	usageText   string
+	usageSuffix string
+	commands    []*CommandUnit
+	args        []string
+	subArgs     []string
 )
 
-// Parse parses the command.
+// SetUsageText sets the CLI description for the usage help.
+func SetUsageText(s string) {
+	usageText = s
+}
+
+// SetUsageSuffix sets the suffix added to the the usage line.
+// It can be used to documentate command arguments.
+func SetUsageSuffix(s string) {
+	usageSuffix = s
+}
+
+// Parse parses the command arguments.
 func Parse() {
-	// Pass args after "--" to subprocess.
-	for i := 0; i < len(os.Args); i++ {
-		if os.Args[i] == "--" {
-			subArgs = os.Args[i+1:]
+	args = os.Args[1:]
+
+	// Parse subarguments (after "--") for a subprocess.
+	for i := 0; i < len(args); i++ {
+		if args[i] == "--" {
+			subArgs = args[i+1:]
+			args = args[:i]
 		}
 	}
 
 	// Check if first argument is a command and parse its flags.
-	if len(os.Args) > 1 {
+	if len(args) > 1 {
 		for _, c := range commands {
-			if c.flagSet.Name() != os.Args[1] {
+			if c.flagSet.Name() != args[0] {
 				continue
 			}
-			c.flagSet.Parse(os.Args[2:])
+			c.flagSet.Parse(args[1:])
+			args = c.flagSet.Args()
 			c.f()
 			os.Exit(0)
 		}
@@ -38,12 +53,26 @@ func Parse() {
 
 	// Otherwise, parse main flags.
 	flag.Usage = Usage
-	flag.Parse()
+	flag.CommandLine.Parse(args)
+	args = flag.Args()
 }
 
 // Parsed reports whether the command-line flags have been parsed.
 func Parsed() bool {
 	return flag.Parsed()
+}
+
+// Arg returns the i'th non-flag CLI argument.
+func Arg(i int) string {
+	if i < 0 || i >= len(args) {
+		return ""
+	}
+	return args[i]
+}
+
+// Args returns the non-flag CLI arguments.
+func Args() []string {
+	return args
 }
 
 // SubArgs returns the arguments after "--".

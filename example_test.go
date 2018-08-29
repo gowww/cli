@@ -9,7 +9,7 @@ var (
 )
 
 func Example() {
-	cli.Description = "Command line interface example."
+	cli.SetUsageText("Command line interface example.")
 
 	cli.String(&flagForMain, "m", "", "Example flag for main function.")
 
