@@ -17,7 +17,6 @@ var (
 
 // Parse parses the command.
 func Parse() {
-	fmt.Println("cliflags: ", os.Args[1:])
 	// Pass args after "--" to subprocess.
 	for i := 0; i < len(os.Args); i++ {
 		if os.Args[i] == "--" {

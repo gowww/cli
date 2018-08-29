@@ -1,4 +1,4 @@
-# [![gowww](https://avatars.githubusercontent.com/u/18078923?s=20)](https://github.com/gowww) cli [![GoDoc](https://godoc.org/github.com/gowww/cli?status.svg)](https://godoc.org/github.com/gowww/cli) [![Build](https://travis-ci.org/gowww/cli.svg?branch=master)](https://travis-ci.org/gowww/cli) [![Coverage](https://coveralls.io/repos/github/gowww/cli/badge.svg?branch=master)](https://coveralls.io/github/gowww/cli?branch=master) [![Go Report](https://goreportcard.com/badge/github.com/gowww/cli)](https://goreportcard.com/report/github.com/gowww/cli) ![Status Unstable](https://img.shields.io/badge/status-unstable-red.svg)
+# [![gowww](https://avatars.githubusercontent.com/u/18078923?s=20)](https://github.com/gowww) cli [![GoDoc](https://godoc.org/github.com/gowww/cli?status.svg)](https://godoc.org/github.com/gowww/cli) [![Build](https://travis-ci.org/gowww/cli.svg?branch=master)](https://travis-ci.org/gowww/cli) [![Coverage](https://coveralls.io/repos/github/gowww/cli/badge.svg?branch=master)](https://coveralls.io/github/gowww/cli?branch=master) [![Go Report](https://goreportcard.com/badge/github.com/gowww/cli)](https://goreportcard.com/report/github.com/gowww/cli) ![Status Testing](https://img.shields.io/badge/status-testing-orange.svg)
 
 Package [cli](https://godoc.org/github.com/gowww/cli) wraps the standard [flag](https://golang.org/pkg/flag/) package for a cleaner command line interface.
 
@@ -18,7 +18,14 @@ Package [cli](https://godoc.org/github.com/gowww/cli) wraps the standard [flag](
 
 ## Usage
 
-Work in progress...
+Henceforth, by "command" we mean "subcommand" (like the `build` part in `go build`)…
+
+The order in which you define commands and flags is important!  
+When you define a main flag, it will be added to the top-level flag set but also to all commands already defined.
+
+Obviously, each command can also define its own flags.
+
+For the sake of clarity for the developer and ease of use for the final user, the usage pattern is simple and always the same : `program [command] [flags]`. No flags before command, and no commands of commands.
 
 ### Example
 
@@ -28,48 +35,61 @@ package main
 import "github.com/gowww/cli"
 
 var (
-	address    string
-	production bool
+	flagForMain    string // Flag "-m"
+	flagForCommand string // Flag "-c"
+	flagForAll     string // Flag "-a"
 )
 
 func main() {
 	cli.Description = "Command line interface example."
 
-	cli.Command("run", run, "Run app.").
-		Bool(&production, "docker", false, `Run the server in production environment.`)
+	cli.String(&flagForMain, "m", "", "Example flag for main function.")
 
-	cli.Command("watch", watch, "Detect changes and rerun app.")
+	cli.Command("command", command, "Example command.").
+		String(&flagForCommand, "c", "", `Example flag for this command only.`)
 
-	cli.String(&address, "address", ":8080", "The address to listen and serve on.")
+	cli.String(&flagForAll, "a", "", "Example flag for main function and all commands defined previously.")
 
 	cli.Parse()
 }
 
-func run() {
-	// Run app.
-}
-
-func watch() {
-	// Detect changes and rerun app.
+func command() {
+	// Do the command job.
 }
 ```
 
 #### Usage output
 
-```Shell
+##### For `example -help`
+
+```
 Command line interface example.
 
 Usage:
 
-        example [command]
+	example [command] [flags]
 
 Commands:
 
-        run    Run app.
-        watch  Detect changes and rerun app.
+	command  Example command.
 
 Flags:
 
-        -address=:8080  The address to listen and serve on.
+	-a  Example flag for main function and all commands defined previously.
+	-m  Example flag for main function.
+```
 
+##### For `example command -help`
+
+```
+Example command.
+
+Usage:
+
+	example command [flags]
+
+Flags:
+
+	-a  Example flag for main function and all commands defined previously.
+	-c  Example flag for this command only.
 ```
