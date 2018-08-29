@@ -25,7 +25,7 @@ func printUsage(command *CommandUnit) {
 		}
 	} else {
 		if command.description == "" {
-			description = strings.Title(command.name)
+			description = strings.Title(command.flagSet.Name())
 		} else {
 			description = command.description
 		}
@@ -45,19 +45,30 @@ func printUsage(command *CommandUnit) {
 	// Print usage
 	fmt.Printf("\n%s\n\nUsage:\n\n\t%s", description, os.Args[0])
 	if command == nil {
-		if len(flags) > 0 {
-			fmt.Print(" [flags]")
-		}
 		if len(commands) > 0 {
 			fmt.Print(" [command]")
 		}
+		if len(flags) > 0 {
+			fmt.Print(" [flags]")
+		}
 	} else {
-		fmt.Printf(" %s", command.name)
+		fmt.Printf(" %s", command.flagSet.Name())
 		if len(flags) > 0 {
 			fmt.Print(" [flags]")
 		}
 	}
 	fmt.Print("\n\n")
+
+	// Print commands
+	if command == nil && len(commands) > 0 {
+		fmt.Print("Commands:\n\n")
+		sort.Slice(commands, func(i, j int) bool { return commands[i].flagSet.Name() < commands[j].flagSet.Name() })
+		l := maxCommandLen(commands)
+		for _, cmd := range commands {
+			fmt.Printf("\t%s%s  %s\n", cmd.flagSet.Name(), strings.Repeat(" ", l-len(cmd.flagSet.Name())), cmd.description)
+		}
+		fmt.Print("\n")
+	}
 
 	// Print flags
 	if len(flags) > 0 {
@@ -68,23 +79,12 @@ func printUsage(command *CommandUnit) {
 		}
 		fmt.Print("\n")
 	}
-
-	// Print commands
-	if command == nil && len(commands) > 0 {
-		fmt.Print("Commands:\n\n")
-		sort.Slice(commands, func(i, j int) bool { return commands[i].name < commands[j].name })
-		l := maxCommandLen(commands)
-		for _, cmd := range commands {
-			fmt.Printf("\t%s%s  %s\n", cmd.name, strings.Repeat(" ", l-len(cmd.name)), cmd.description)
-		}
-		fmt.Print("\n")
-	}
 }
 
 func maxCommandLen(cmds []*CommandUnit) (l int) {
 	for _, c := range cmds {
-		if len(c.name) > l {
-			l = len(c.name)
+		if len(c.flagSet.Name()) > l {
+			l = len(c.flagSet.Name())
 		}
 	}
 	return

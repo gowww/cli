@@ -9,7 +9,6 @@ import (
 // A CommandUnit is a CLI command with name, description and flags.
 type CommandUnit struct {
 	f           func()
-	name        string
 	description string
 	flagSet     *flag.FlagSet
 }
@@ -17,7 +16,6 @@ type CommandUnit struct {
 // Command adds a new command to the CLI.
 func Command(name string, f func(), description string) *CommandUnit {
 	cmd := &CommandUnit{
-		name:        name,
 		description: description,
 		f:           f,
 		flagSet:     flag.NewFlagSet(name, flag.ExitOnError),

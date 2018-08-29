@@ -17,9 +17,7 @@ var (
 
 // Parse parses the command.
 func Parse() {
-	flag.Usage = Usage
-	flag.Parse()
-
+	fmt.Println("cliflags: ", os.Args[1:])
 	// Pass args after "--" to subprocess.
 	for i := 0; i < len(os.Args); i++ {
 		if os.Args[i] == "--" {
@@ -27,17 +25,21 @@ func Parse() {
 		}
 	}
 
-	cmd := flag.Arg(0)
-	for _, c := range commands {
-		if cmd == c.name {
-			// <command> <subcommand>
-			if c.flagSet != nil {
-				c.flagSet.Parse(flag.Args()[1:])
+	// Check if first argument is a command and parse its flags.
+	if len(os.Args) > 1 {
+		for _, c := range commands {
+			if c.flagSet.Name() != os.Args[1] {
+				continue
 			}
+			c.flagSet.Parse(os.Args[2:])
 			c.f()
 			os.Exit(0)
 		}
 	}
+
+	// Otherwise, parse main flags.
+	flag.Usage = Usage
+	flag.Parse()
 }
 
 // Parsed reports whether the command-line flags have been parsed.
