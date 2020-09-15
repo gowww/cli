@@ -39,7 +39,7 @@ func Parse() {
 	}
 
 	// Check if first argument is a command and parse its flags.
-	if len(args) > 1 {
+	if len(args) >= 1 {
 		for _, c := range commands {
 			if c.flagSet.Name() != args[0] {
 				continue
